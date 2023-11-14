@@ -6,3 +6,6 @@
 
 # Byte-compiled
 __pycache__/
+
+# Vector DB should be temporary
+db/
