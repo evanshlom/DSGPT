@@ -2,7 +2,9 @@
 tut: https://medium.com/@diptimanrc/rapid-q-a-on-multiple-pdfs-using-langchain-and-chromadb-as-local-disk-vector-store-60678328c0df
 '''
 
-import(‘pysqlite3’) import sys sys.modules[‘sqlite3’] = sys.modules.pop(‘pysqlite3’)
+# import(‘pysqlite3’) import sys sys.modules[‘sqlite3’] = sys.modules.pop(‘pysqlite3’)
+import sys
+sys.modules['sqlite3'] = __import__('pysqlite3')
 
 import streamlit as st
 
