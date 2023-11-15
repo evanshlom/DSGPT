@@ -16,21 +16,15 @@ from langchain.vectorstores.chroma import Chroma #https://github.com/langchain-a
 import chromadb
 
 import os
-# import toml
-# os.environ['OPENAI_API_KEY'] = toml.get(OPENAI_API_KEY)
 
-# from credentials.api.openai import OPENAI_API_KEY
-# os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
+# from credentials.api.openai import OPENAI_API_KEY # local testing
+# os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY # local testing
+os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]
 
-from dotenv import load_dotenv
-def configure():
-    load_dotenv()
-
-# # # from os import listdir
-# # # from os.path import isfile, join
+from dirs import SOURCE_DIRECTORY, PERSIST_DIRECTORY
 
 def load_chunk_persist_pdf() -> Chroma:
-    folder_path = "C:\\Users\\me\\Projects\\llm\\langchain-chromadb-pdf-2\\data"
+    folder_path = SOURCE_DIRECTORY # "C:\\Users\\me\\Projects\\llm\\langchain-chromadb-pdf-2\\data"
     documents = []
     # for file in os.listdir(folder_path):
     # data_files = [f for f in listdir(folder_path) if isfile(join(folder_path, f))]
@@ -77,13 +71,13 @@ def load_chunk_persist_pdf() -> Chroma:
     chunked_documents = text_splitter.split_documents(documents)
     client = chromadb.Client()
     if client.list_collections():
-        consent_collection = client.create_collection("dsgpt_collection_a3")
+        consent_collection = client.create_collection("dsgpt_collection_a5")
     else:
         print("Collection already exists")
     vectordb = Chroma.from_documents(
         documents=chunked_documents,
         embedding=OpenAIEmbeddings(),
-        persist_directory=r"./db"
+        persist_directory=PERSIST_DIRECTORY # "C:\\Users\\me\\Projects\\llm\\langchain-chromadb-pdf-2\\db" # r"./db" # 
     )
     vectordb.persist()
     return vectordb 
@@ -95,7 +89,6 @@ def create_agent_chain():
     return chain
 
 def get_llm_response(query):
-    configure()
     vectordb = load_chunk_persist_pdf()
     chain = create_agent_chain()
     matching_docs = vectordb.similarity_search(query)
