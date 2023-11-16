@@ -94,15 +94,19 @@ def create_agent_chain():
     return chain
 
 def get_llm_response(query):
-    vectordb = load_chunk_persist_pdf()
-    chain = create_agent_chain()
+    # vectordb = load_chunk_persist_pdf()
+    # chain = create_agent_chain()
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
     return answer
 
+########################################################################################
 
-# Streamlit UI
-# ===============
+# Load Tools
+vectordb = load_chunk_persist_pdf()
+chain = create_agent_chain()
+
+# User Interface
 st.set_page_config(page_title="DSGPT", page_icon=":robot:")
 st.header("DSGPT: Ask python libraries how they work")
 
