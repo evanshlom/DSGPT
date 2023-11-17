@@ -1,23 +1,14 @@
-'''
-tut: https://medium.com/@diptimanrc/rapid-q-a-on-multiple-pdfs-using-langchain-and-chromadb-as-local-disk-vector-store-60678328c0df
-'''
-
-# import(‘pysqlite3’) import sys sys.modules[‘sqlite3’] = sys.modules.pop(‘pysqlite3’)
 import sys
 sys.modules['sqlite3'] = __import__('pysqlite3')
 
 import streamlit as st
 
-# from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader, UnstructuredExcelLoader, Docx2txtLoader
-# from langchain.document_loaders import UnstructuredFileLoader, UnstructuredMarkdownLoader
-
-from langchain.document_loaders import PyPDFLoader, PythonLoader, UnstructuredWordDocumentLoader#, Docx2txtLoader
+from langchain.document_loaders import PyPDFLoader, PythonLoader, UnstructuredWordDocumentLoader#, Docx2txtLoader # from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader, UnstructuredExcelLoader, Docx2txtLoader, UnstructuredFileLoader, UnstructuredMarkdownLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
-# # # from langchain.vectorstores import Chroma # from tut
-from langchain.vectorstores.chroma import Chroma #https://github.com/langchain-ai/langchain/issues/7119
+from langchain.vectorstores.chroma import Chroma
 import chromadb
 
 import os
@@ -102,9 +93,16 @@ def get_llm_response(query):
 
 ########################################################################################
 
+# TODO: Implement session state to avoid reloading the db and chain on every submit
+
 # Load Tools
-vectordb = load_chunk_persist_pdf()
-chain = create_agent_chain()
+if "vectordb" not in st.session_state:
+    vectordb = load_chunk_persist_pdf()
+    st.session_state.vectordb = vectordb 
+
+if "chain" not in st.session_state:
+    chain = create_agent_chain()
+    st.session_state.chain = chain
 
 # User Interface
 st.set_page_config(page_title="DSGPT", page_icon=":robot:")
