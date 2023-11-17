@@ -1,10 +1,10 @@
-import sys
-sys.modules['sqlite3'] = __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = __import__('pysqlite3')
 
 import streamlit as st
 
 from langchain.document_loaders import PyPDFLoader, PythonLoader, UnstructuredWordDocumentLoader#, Docx2txtLoader # from langchain.document_loaders import CSVLoader, PDFMinerLoader, TextLoader, UnstructuredExcelLoader, Docx2txtLoader, UnstructuredFileLoader, UnstructuredMarkdownLoader
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter # CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
@@ -13,9 +13,11 @@ import chromadb
 
 import os
 
-# from credentials.api.openai import OPENAI_API_KEY # local testing
-# os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY # local testing
-os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]
+# Local Testing
+from local_secrets.key import OPENAI_API_KEY
+os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
+
+# os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]
 
 from dirs import SOURCE_DIRECTORY, PERSIST_DIRECTORY
 
@@ -63,7 +65,7 @@ def load_chunk_persist_pdf() -> Chroma:
     # ".docx": Docx2txtLoader,
     # ".doc": Docx2txtLoader,
     
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=10)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=10)
     chunked_documents = text_splitter.split_documents(documents)
     client = chromadb.Client()
     if client.list_collections():
@@ -85,8 +87,6 @@ def create_agent_chain():
     return chain
 
 def get_llm_response(query):
-    # vectordb = load_chunk_persist_pdf()
-    # chain = create_agent_chain()
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
     return answer

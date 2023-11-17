@@ -1,7 +1,8 @@
 from main import get_llm_response
+import os 
 
-from credentials.api.openai import OPENAI_API_KEY
-import os
+# Local Testing
+from local_secrets.key import OPENAI_API_KEY
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 # Query PDF Source

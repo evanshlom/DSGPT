@@ -9,3 +9,6 @@ __pycache__/
 
 # Vector DB should be temporary
 db/
+
+# Keep actual secrets secret
+local_secrets/
