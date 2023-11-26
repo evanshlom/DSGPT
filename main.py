@@ -1,5 +1,5 @@
-# import sys
-# sys.modules['sqlite3'] = __import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = __import__('pysqlite3')
 
 import streamlit as st
 
@@ -13,11 +13,11 @@ import chromadb
 
 import os
 
-# Local Testing
-from local_secrets.key import OPENAI_API_KEY
-os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
+# # Local Testing
+# from local_secrets.key import OPENAI_API_KEY
+# os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
-# os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]
+os.environ['OPENAI_API_KEY'] = st.secrets["OPENAI_API_KEY"]
 
 from dirs import SOURCE_DIRECTORY, PERSIST_DIRECTORY
 
