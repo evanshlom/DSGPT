@@ -112,4 +112,6 @@ form_input = st.text_input('Enter Question and Click Enter with your Mouse')
 submit = st.button("Generate")
 
 if submit:
+    print(st.session_state.vectordb)
+    print(vectordb)
     st.write(get_llm_response(form_input))
