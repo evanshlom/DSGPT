@@ -90,11 +90,11 @@ def get_llm_response(query):
 
     if "vectordb" not in st.session_state:
         vectordb = load_chunk_persist_pdf()
-        st.session_state.vectordb = vectordb 
+        st.session_state['vectordb'] = vectordb 
 
     if "chain" not in st.session_state:
         chain = create_agent_chain()
-        st.session_state.chain = chain
+        st.session_state['chain '] = chain
 
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
@@ -107,11 +107,11 @@ def get_llm_response(query):
 # Load Tools
 #if "vectordb" not in st.session_state:
 vectordb = load_chunk_persist_pdf()
-st.session_state.vectordb = vectordb 
+st.session_state['vectordb'] = vectordb 
 
 #if "chain" not in st.session_state:
 chain = create_agent_chain()
-st.session_state.chain = chain
+st.session_state['chain'] = chain
 
 # User Interface
 st.set_page_config(page_title="DSGPT", page_icon=":robot:")
