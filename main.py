@@ -87,6 +87,15 @@ def create_agent_chain():
     return chain
 
 def get_llm_response(query):
+
+    if "vectordb" not in st.session_state:
+        vectordb = load_chunk_persist_pdf()
+        st.session_state.vectordb = vectordb 
+
+    if "chain" not in st.session_state:
+        chain = create_agent_chain()
+        st.session_state.chain = chain
+
     matching_docs = vectordb.similarity_search(query)
     answer = chain.run(input_documents=matching_docs, question=query)
     return answer
@@ -96,13 +105,13 @@ def get_llm_response(query):
 # TODO: Implement session state to avoid reloading the db and chain on every submit
 
 # Load Tools
-if "vectordb" not in st.session_state:
-    vectordb = load_chunk_persist_pdf()
-    st.session_state.vectordb = vectordb 
+# if "vectordb" not in st.session_state:
+#     vectordb = load_chunk_persist_pdf()
+#     st.session_state.vectordb = vectordb 
 
-if "chain" not in st.session_state:
-    chain = create_agent_chain()
-    st.session_state.chain = chain
+# if "chain" not in st.session_state:
+#     chain = create_agent_chain()
+#     st.session_state.chain = chain
 
 # User Interface
 st.set_page_config(page_title="DSGPT", page_icon=":robot:")
@@ -112,6 +121,6 @@ form_input = st.text_input('Enter Question and Click Enter with your Mouse')
 submit = st.button("Generate")
 
 if submit:
-    print(st.session_state.vectordb)
-    print(vectordb)
+    # print(st.session_state.vectordb)
+    # print(vectordb) # NameError: name 'vectordb' is not defined
     st.write(get_llm_response(form_input))
